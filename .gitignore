@@ -1,0 +1,25 @@
+# Data
+/data/
+/Wardwise_Shapefiles/
+*.zip
+*.db
+backend/floodrisk.db
+
+# Python
+__pycache__/
+*.pyc
+.pip_packages/
+venv/
+.env
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.gemini/
