@@ -19,6 +19,8 @@ const Map = dynamic(() => import('./Map'), {
   ),
 });
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export default function Dashboard() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [showLanding, setShowLanding] = useState(true);
@@ -41,7 +43,7 @@ export default function Dashboard() {
 
   // Fetch Cities
   useEffect(() => {
-    fetch('http://localhost:8000/api/cities')
+    fetch(`${API_BASE}/api/cities`)
       .then((res) => res.json())
       .then((data) => {
         setCities(data);
@@ -54,12 +56,12 @@ export default function Dashboard() {
   useEffect(() => {
     if (!selectedCityId) return;
 
-    fetch(`http://localhost:8000/api/terrain?city_id=${selectedCityId}`)
+    fetch(`${API_BASE}/api/terrain?city_id=${selectedCityId}`)
       .then((res) => res.json())
       .then((data) => setTerrainStats(data))
       .catch((err) => console.error("Error fetching terrain", err));
 
-    fetch(`http://localhost:8000/api/rainfall?city_id=${selectedCityId}`)
+    fetch(`${API_BASE}/api/rainfall?city_id=${selectedCityId}`)
       .then((res) => res.json())
       .then((data) => setRainfallData(data))
       .catch((err) => console.error("Error fetching rainfall", err));
@@ -69,7 +71,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!selectedCityId || !selectedYear) return;
 
-    fetch(`http://localhost:8000/api/wards?city_id=${selectedCityId}&year=${selectedYear}`)
+    fetch(`${API_BASE}/api/wards?city_id=${selectedCityId}&year=${selectedYear}`)
       .then((res) => res.json())
       .then((data) => {
         setGeojsonData(data);

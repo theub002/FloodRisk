@@ -18,7 +18,8 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/api/trends?ward_id=${wardId}`)
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    fetch(`${API_BASE}/api/trends?ward_id=${wardId}`)
       .then((res) => res.json())
       .then((json) => {
         setData(json);
