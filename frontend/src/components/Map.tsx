@@ -185,7 +185,7 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
         
         {geojsonData && (
           <GeoJSON
-            key={JSON.stringify(geojsonData.features?.[0]?.properties?.year) + theme + selectedWardId}
+            key={theme + '-' + selectedWardId + '-' + (geojsonData.features?.[0]?.properties?.ward_id || '') + '-' + geojsonData.features?.length + '-' + geojsonData.features?.[0]?.properties?.year}
             data={geojsonData}
             style={getStyle}
             onEachFeature={onEachFeature}
