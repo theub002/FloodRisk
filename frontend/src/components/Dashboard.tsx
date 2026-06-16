@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Search, Calendar, ShieldAlert, BarChart3, CloudRain, MapPin, Compass, Eye, TrendingUp, Sun, Moon, ChevronDown, Filter, TriangleAlert, Settings, ArrowLeft, ArrowUp, ArrowDown } from 'lucide-react';
+import { Search, Calendar, ShieldAlert, BarChart3, CloudRain, MapPin, Compass, Eye, TrendingUp, Sun, Moon, ChevronDown, Filter, TriangleAlert, Settings, ArrowLeft, ArrowUp, ArrowDown, Map as MapIcon } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
 import WardDetailModal from './WardDetailModal';
 import TerrainModal from './TerrainModal';
@@ -50,6 +50,7 @@ export default function Dashboard() {
   const [filterMinFRI, setFilterMinFRI] = useState<number | ''>('');
   const [filterMaxFRI, setFilterMaxFRI] = useState<number | ''>('');
   const [sortConfig, setSortConfig] = useState<{ key: 'ward_number' | 'rank', direction: 'asc' | 'desc' }>({ key: 'ward_number', direction: 'asc' });
+  const [mobileView, setMobileView] = useState<'sidebar' | 'map'>('sidebar');
 
   // Sync state from query parameters on browser navigate (back/forward)
   useEffect(() => {
@@ -171,6 +172,7 @@ export default function Dashboard() {
     } else {
       setSelectedWard({ id, name });
       setActiveSidebarTab('ward');
+      setMobileView('map');
     }
   };
 
@@ -180,8 +182,9 @@ export default function Dashboard() {
       {/* Top Header Navigation */}
       <header className="flex flex-col md:flex-row justify-between items-center px-6 py-4 border-b border-[var(--border)] bg-[var(--card)]/85 backdrop-blur-md z-10 gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-1 bg-white border border-blue-500/20 rounded-xl flex items-center justify-center w-11 h-11 shadow-sm overflow-hidden">
-            <img src="/iiti_logo.png" alt="IIT Logo" className="w-full h-full object-contain" />
+          <div className="bg-white border border-blue-500/20 rounded-xl flex items-center justify-center w-12 h-12 shadow-sm overflow-hidden p-1.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/iiti_logo.png" alt="IIT Indore Logo" width={40} height={40} style={{ objectFit: 'contain', width: '100%', height: '100%' }} />
           </div>
           <div>
             <h1 className="text-lg font-bold tracking-tight">URBAN FLOOD RISK INDEX GIS PLATFORM</h1>
@@ -237,7 +240,7 @@ export default function Dashboard() {
       <main className="flex-1 flex overflow-hidden">
 
         {/* Sidebar Layout */}
-        <aside className="w-full md:w-[350px] border-r border-[var(--border)] bg-[var(--card)] flex flex-col h-full z-10 shrink-0">
+        <aside className={`${mobileView === 'map' ? 'hidden' : 'flex'} w-full md:flex md:w-[350px] border-r border-[var(--border)] bg-[var(--card)] flex-col h-full z-10 shrink-0`}>
 
           {/* Sidebar Tabs */}
           <div className="flex border-b border-[var(--border)] bg-[var(--secondary)]/50">
@@ -675,7 +678,7 @@ export default function Dashboard() {
         </aside>
 
         {/* Center/Right Area: Leaflet Map Container */}
-        <section className="flex-1 p-5 bg-[var(--background)]/20 relative">
+        <section className={`${mobileView === 'sidebar' ? 'hidden' : 'block'} md:block flex-1 p-5 bg-[var(--background)]/20 relative`}>
           {/* Floating Action Buttons on the Right over the Map */}
           <div className="absolute top-8 right-8 z-[1000] bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-xl border border-gray-200">
             <div className="flex flex-col gap-2.5 w-[85px]">
@@ -707,6 +710,26 @@ export default function Dashboard() {
         </section>
 
       </main>
+
+      {/* Floating Toggle Button for Mobile */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1001] md:hidden">
+        <button
+          onClick={() => setMobileView(mobileView === 'sidebar' ? 'map' : 'sidebar')}
+          className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl transition-all duration-200 border border-blue-500/20 active:scale-95 font-semibold text-sm cursor-pointer"
+        >
+          {mobileView === 'sidebar' ? (
+            <>
+              <MapIcon className="w-4 h-4" />
+              <span>View Map</span>
+            </>
+          ) : (
+            <>
+              <BarChart3 className="w-4 h-4" />
+              <span>View Stats</span>
+            </>
+          )}
+        </button>
+      </div>
 
       {/* Modals */}
       {showTrendModal && selectedWard && (
