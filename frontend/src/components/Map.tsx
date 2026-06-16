@@ -6,6 +6,7 @@ import L from 'leaflet';
 
 // Fix Leaflet icons issues in Next.js
 const fixLeafletIcon = () => {
+  
   // @ts-ignore
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -18,7 +19,7 @@ const fixLeafletIcon = () => {
 interface MapProps {
   geojsonData: any;
   selectedWardId: number | null;
-  onSelectWard: (wardId: number, wardName: string) => void;
+  onSelectWard: (wardId: number | null, wardName: string) => void;
   theme: 'light' | 'dark';
 }
 
@@ -44,22 +45,36 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-// Component to dynamically pan/zoom map when GeoJSON data is loaded
-function ChangeView({ geojsonData }: { geojsonData: any }) {
+// Component to dynamically pan/zoom map when GeoJSON data is loaded or ward is deselected
+function ChangeView({ geojsonData, selectedWardId, geojsonRef }: { geojsonData: any, selectedWardId: number | null, geojsonRef: any }) {
   const map = useMap();
   useEffect(() => {
-    if (geojsonData && geojsonData.features && geojsonData.features.length > 0) {
+    if (!geojsonData || !geojsonData.features) return;
+
+    if (selectedWardId === null && geojsonData.features.length > 0) {
       try {
         const layer = L.geoJSON(geojsonData);
         const bounds = layer.getBounds();
         if (bounds.isValid()) {
-          map.fitBounds(bounds, { animate: true, duration: 0.5 });
+          map.fitBounds(bounds, { animate: true, duration: 0.5, padding: [20, 20] });
         }
       } catch (err) {
         console.error("Error fitting map bounds: ", err);
       }
+    } else if (selectedWardId !== null && geojsonRef?.current) {
+      try {
+        const layers = geojsonRef.current.getLayers();
+        for (const layer of layers) {
+          if (layer.feature && layer.feature.properties.ward_id === selectedWardId) {
+            map.fitBounds(layer.getBounds(), { animate: true, duration: 0.5, padding: [20, 20], maxZoom: 17 });
+            break;
+          }
+        }
+      } catch (err) {
+        console.error("Error zooming to ward: ", err);
+      }
     }
-  }, [geojsonData, map]);
+  }, [geojsonData, selectedWardId, map, geojsonRef]);
   return null;
 }
 
@@ -137,8 +152,18 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
           target.bringToFront();
         }
       },
-      click: () => {
-        onSelectWard(props.ward_id, props.ward_name);
+      click: (e: any) => {
+        if (selectedWardId === props.ward_id) {
+          // Toggle off
+          onSelectWard(null, "");
+        } else {
+          // Select and zoom
+          onSelectWard(props.ward_id, props.ward_name);
+          const map = e.target._map;
+          if (map) {
+            map.fitBounds(e.target.getBounds(), { padding: [20, 20], maxZoom: 17 });
+          }
+        }
       },
     });
 
@@ -165,6 +190,23 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
+  const categoryCounts = {
+    'Very High': 0,
+    'High': 0,
+    'Moderate': 0,
+    'Low': 0,
+    'Very Low': 0,
+  };
+
+  if (geojsonData && geojsonData.features) {
+    geojsonData.features.forEach((f: any) => {
+      const cat = f.properties.category;
+      if (categoryCounts[cat as keyof typeof categoryCounts] !== undefined) {
+        categoryCounts[cat as keyof typeof categoryCounts]++;
+      }
+    });
+  }
+
   return (
     <div className={`w-full h-full relative overflow-hidden rounded-xl border shadow-2xl transition-colors ${theme === 'dark' ? 'border-slate-800 bg-slate-950' : 'border-slate-200 bg-white'}`}>
       <MapContainer
@@ -174,7 +216,7 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
         zoomControl={true}
         attributionControl={false}
       >
-        <ChangeView geojsonData={geojsonData} />
+        <ChangeView geojsonData={geojsonData} selectedWardId={selectedWardId} geojsonRef={geojsonRef} />
         {/* Sleek Dynamic Mode Map Tiles */}
         <TileLayer
           key={theme}
@@ -200,23 +242,23 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#660107' }}></span>
-            <span>Very High (&gt; 20.2)</span>
+            <span>Very High ({categoryCounts['Very High']})</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#c10712' }}></span>
-            <span>High (16.7 - 20.2)</span>
+            <span>High ({categoryCounts['High']})</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#FFAE19' }}></span>
-            <span>Moderate (13.1 - 16.7)</span>
+            <span>Moderate ({categoryCounts['Moderate']})</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#26ae00' }}></span>
-            <span>Low (9.6 - 13.1)</span>
+            <span>Low ({categoryCounts['Low']})</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#4da9e4' }}></span>
-            <span>Very Low (&lt;= 9.6)</span>
+            <span>Very Low ({categoryCounts['Very Low']})</span>
           </div>
         </div>
       </div>

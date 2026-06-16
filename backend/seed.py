@@ -243,22 +243,57 @@ def seed_data():
     cities_config = [
         {
             "name": "Indore",
-            "shp_path": r"c:\Users\MJ\FloodRisk\data\shapefiles\Wardwise_Shapefiles\Indore\indore_wards.shp",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Indore\indore_wards.shp",
             "data_dir": r"c:\Users\MJ\FloodRisk\data\output_indore",
             "ward_number_field": "sourcewa_1",
             "ward_name_field": "ward_lgd_n"
         },
         {
             "name": "Bhopal",
-            "shp_path": r"c:\Users\MJ\FloodRisk\data\shapefiles\Wardwise_Shapefiles\Bhopal\Bhopal_wards.shp",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Bhopal\Bhopal_wards.shp",
             "data_dir": r"c:\Users\MJ\FloodRisk\data\output_bhopal",
             "ward_number_field": "Ward_Numbe",
             "ward_name_field": "Name"
         },
         {
             "name": "Jabalpur",
-            "shp_path": r"c:\Users\MJ\FloodRisk\data\shapefiles\Wardwise_Shapefiles\Jabalpur\Jabalpur_wards.shp",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Jabalpur\Jabalpur_wards.shp",
             "data_dir": r"c:\Users\MJ\FloodRisk\data\output_jabalpur",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Amarkantak",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Amarkantak\Amarkantak_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_amarkantak",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Dindori",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Dindori\Dindori_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_dindori",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Khandwa",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Khandwa\Khandwa_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_khandwa",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Narmadapuram",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Narmadapuram\Narmadapuram_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_narmadapuram",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Punasa",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Punasa\Punasa_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_punasa",
             "ward_number_field": "wardno",
             "ward_name_field": "wardname"
         }
