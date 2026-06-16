@@ -2,7 +2,6 @@
 /data/
 /Wardwise_Shapefiles/
 *.zip
-*.db
 
 # Python
 __pycache__/
