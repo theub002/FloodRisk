@@ -694,23 +694,55 @@ export default function Dashboard() {
         {/* Center/Right Area: Leaflet Map Container */}
         <section className={`${mobileView === 'sidebar' ? 'hidden' : 'block'} md:block flex-1 p-5 bg-[var(--background)]/20 relative`}>
           {/* Floating Action Buttons on the Right over the Map */}
-          <div className="absolute top-8 right-8 z-[1000] bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-xl border border-gray-200">
+          <div className={`absolute top-8 right-8 z-[1000] backdrop-blur-md p-2.5 rounded-2xl shadow-xl border transition-colors duration-200 ${
+            theme === 'dark' 
+              ? 'bg-slate-900/90 border-slate-700/60' 
+              : 'bg-white/90 border-gray-200'
+          }`}>
             <div className="flex flex-col gap-2.5 w-[85px]">
-              <button onClick={() => setActiveModal('terrain')} className="flex flex-col items-center justify-center gap-1 py-3 bg-[#F8F9FA] hover:bg-[#F0F2F5] rounded-[14px] border border-gray-200/60 transition-all shadow-sm">
-                <Compass className="w-5 h-5 text-[#1a73e8]" strokeWidth={2} />
-                <span className="text-[10px] font-bold text-[#202124]">Terrain</span>
+              <button 
+                onClick={() => setActiveModal('terrain')} 
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-200'
+                    : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
+                }`}
+              >
+                <Compass className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
+                <span className="text-[10px] font-bold">Terrain</span>
               </button>
-              <button onClick={() => setActiveModal('rainfall')} className="flex flex-col items-center justify-center gap-1 py-3 bg-[#F8F9FA] hover:bg-[#F0F2F5] rounded-[14px] border border-gray-200/60 transition-all shadow-sm">
-                <CloudRain className="w-5 h-5 text-[#1a73e8]" strokeWidth={2} />
-                <span className="text-[10px] font-bold text-[#202124]">Rainfall</span>
+              <button 
+                onClick={() => setActiveModal('rainfall')} 
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-200'
+                    : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
+                }`}
+              >
+                <CloudRain className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
+                <span className="text-[10px] font-bold">Rainfall</span>
               </button>
-              <button onClick={() => setActiveModal('assumptions')} className="flex flex-col items-center justify-center gap-1 py-3 bg-[#F8F9FA] hover:bg-[#F0F2F5] rounded-[14px] border border-gray-200/60 transition-all shadow-sm">
-                <Settings className="w-5 h-5 text-[#475569]" strokeWidth={2} />
-                <span className="text-[10px] font-bold text-[#334155]">Assumes</span>
+              <button 
+                onClick={() => setActiveModal('assumptions')} 
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-300'
+                    : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
+                }`}
+              >
+                <Settings className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
+                <span className="text-[10px] font-bold">Assumes</span>
               </button>
-              <button onClick={() => setActiveModal('limitations')} className="flex flex-col items-center justify-center gap-1 py-3 bg-[#F8F9FA] hover:bg-[#F0F2F5] rounded-[14px] border border-gray-200/60 transition-all shadow-sm">
-                <TriangleAlert className="w-5 h-5 text-[#475569]" strokeWidth={2} />
-                <span className="text-[10px] font-bold text-[#334155] leading-tight text-center">Limits</span>
+              <button 
+                onClick={() => setActiveModal('limitations')} 
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-300'
+                    : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
+                }`}
+              >
+                <TriangleAlert className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
+                <span className="text-[10px] font-bold leading-tight text-center">Limits</span>
               </button>
             </div>
           </div>
