@@ -91,7 +91,7 @@ def get_wards(city_id: int, year: int, db: Session = Depends(get_db)):
                 "ward_id": w.id,
                 "ward_number": w.ward_number,
                 "ward_name": w.name,
-                "population": w.population,
+                "population": yearly_stat.population,
                 "year": year,
                 "fri_mean": yearly_stat.fri_mean,
                 "fri_max": yearly_stat.fri_max,
@@ -133,7 +133,8 @@ def get_ward_trends(ward_id: int, db: Session = Depends(get_db)):
         "fei_mean": s.fei_mean,
         "fvi_mean": s.fvi_mean,
         "category": s.category,
-        "rank": s.rank
+        "rank": s.rank,
+        "population": s.population
     } for s in stats]
     
     return {

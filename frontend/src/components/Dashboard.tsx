@@ -49,7 +49,7 @@ export default function Dashboard() {
   const [filterCategory, setFilterCategory] = useState<string>('All');
   const [filterMinFRI, setFilterMinFRI] = useState<number | ''>('');
   const [filterMaxFRI, setFilterMaxFRI] = useState<number | ''>('');
-  const [sortConfig, setSortConfig] = useState<{ key: 'ward_number' | 'rank', direction: 'asc' | 'desc' }>({ key: 'ward_number', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState<{ key: 'ward_number' | 'rank' | 'population', direction: 'asc' | 'desc' }>({ key: 'ward_number', direction: 'asc' });
   const [mobileView, setMobileView] = useState<'sidebar' | 'map'>('sidebar');
 
   // Sync state from query parameters on browser navigate (back/forward)
@@ -612,6 +612,17 @@ export default function Dashboard() {
                                 </div>
                               </div>
                             </th>
+                            <th
+                              className="py-2 px-2 cursor-pointer hover:bg-[var(--border)] transition-colors group text-right"
+                              onClick={() => setSortConfig({ key: 'population', direction: sortConfig.key === 'population' && sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
+                            >
+                              <div className="flex items-center justify-end gap-1">
+                                <div className="text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
+                                  {sortConfig.key === 'population' ? (sortConfig.direction === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />) : <div className="w-3 h-3" />}
+                                </div>
+                                Pop
+                              </div>
+                            </th>
                             <th className="py-2 px-3">FRI Score</th>
                             <th
                               className="py-2 px-3 text-right cursor-pointer hover:bg-[var(--border)] transition-colors group"
@@ -627,45 +638,48 @@ export default function Dashboard() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--border)]">
-                          {filteredWards.length > 0 ? (
-                            filteredWards.map((w: any) => {
-                              const isSelected = selectedWard?.id === w.ward_id;
-                              return (
-                                <tr
-                                  key={w.ward_id}
-                                  onClick={() => handleSelectWard(w.ward_id, w.ward_name)}
-                                  className={`cursor-pointer transition-colors ${isSelected
-                                      ? 'bg-blue-500/10 hover:bg-blue-500/15'
-                                      : 'hover:bg-[var(--secondary)]'
-                                    }`}
-                                >
-                                  <td className="py-2.5 px-3">
-                                    <div className="font-semibold text-[var(--foreground)]">Ward {w.ward_number}</div>
-                                    <div className="text-[10px] text-[var(--muted-foreground)]">{w.ward_name}</div>
-                                  </td>
-                                  <td className="py-2.5 px-3">
-                                    <span className="font-mono font-bold mr-1.5 text-[var(--foreground)]">{w.fri_mean.toFixed(2)}</span>
-                                    <span
-                                      className="text-[9px] px-1 rounded-sm font-bold uppercase tracking-wider"
-                                      style={{ backgroundColor: `${getCategoryColor(w.category)}15`, color: getCategoryColor(w.category) }}
-                                    >
-                                      {w.category}
-                                    </span>
-                                  </td>
-                                  <td className="py-2.5 px-3 text-right font-mono font-semibold text-[var(--muted-foreground)]">
-                                    #{w.rank}
-                                  </td>
-                                </tr>
-                              );
-                            })
-                          ) : (
-                            <tr>
-                              <td colSpan={3} className="py-8 text-center text-[var(--muted-foreground)]">
-                                No matching Wards found
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
+                           {filteredWards.length > 0 ? (
+                             filteredWards.map((w: any) => {
+                               const isSelected = selectedWard?.id === w.ward_id;
+                               return (
+                                 <tr
+                                   key={w.ward_id}
+                                   onClick={() => handleSelectWard(w.ward_id, w.ward_name)}
+                                   className={`cursor-pointer transition-colors ${isSelected
+                                       ? 'bg-blue-500/10 hover:bg-blue-500/15'
+                                       : 'hover:bg-[var(--secondary)]'
+                                     }`}
+                                 >
+                                   <td className="py-2.5 px-3">
+                                     <div className="font-semibold text-[var(--foreground)]">Ward {w.ward_number}</div>
+                                     <div className="text-[10px] text-[var(--muted-foreground)]">{w.ward_name}</div>
+                                   </td>
+                                   <td className="py-2.5 px-2 text-right font-mono font-semibold text-[var(--foreground)]">
+                                     {w.population ? w.population.toLocaleString() : '0'}
+                                   </td>
+                                   <td className="py-2.5 px-3">
+                                     <span className="font-mono font-bold mr-1.5 text-[var(--foreground)]">{w.fri_mean.toFixed(2)}</span>
+                                     <span
+                                       className="text-[9px] px-1 rounded-sm font-bold uppercase tracking-wider"
+                                       style={{ backgroundColor: `${getCategoryColor(w.category)}15`, color: getCategoryColor(w.category) }}
+                                     >
+                                       {w.category}
+                                     </span>
+                                   </td>
+                                   <td className="py-2.5 px-3 text-right font-mono font-semibold text-[var(--muted-foreground)]">
+                                     #{w.rank}
+                                   </td>
+                                 </tr>
+                               );
+                             })
+                           ) : (
+                             <tr>
+                               <td colSpan={4} className="py-8 text-center text-[var(--muted-foreground)]">
+                                 No matching Wards found
+                               </td>
+                             </tr>
+                           )}
+                         </tbody>
                       </table>
                     </div>
 

@@ -51,6 +51,7 @@ class WardYearlyStats(Base):
     
     category = Column(String) # Very Low, Low, Moderate, High, Very High
     rank = Column(Integer)
+    population = Column(Integer, default=0)
     
     ward = relationship("Ward", back_populates="yearly_stats")
 

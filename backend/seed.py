@@ -2,8 +2,32 @@ import os
 import csv
 import json
 import shapefile
+import unicodedata
 from database import engine, SessionLocal
 from models import Base, City, Ward, WardYearlyStats, TerrainStats, RainfallStats, RainfallIntensity
+
+# Load transliteration dictionary for Bhopal wards from JSON file
+BHOPAL_WARD_MAP = {}
+map_path = os.path.join(os.path.dirname(__file__), "bhopal_ward_map.json")
+if os.path.exists(map_path):
+    with open(map_path, 'r', encoding='utf-8') as f:
+        raw_map = json.load(f)
+        BHOPAL_WARD_MAP = {unicodedata.normalize('NFC', k).strip(): v for k, v in raw_map.items()}
+else:
+    print("WARNING: bhopal_ward_map.json not found in backend directory!")
+
+def clean_ward_name(name_val, city_name):
+    if isinstance(name_val, bytes):
+        try:
+            name_val = name_val.decode('utf-8', errors='ignore')
+        except Exception:
+            name_val = name_val.decode('latin-1', errors='ignore')
+    name = str(name_val).strip()
+    if city_name == "Bhopal":
+        norm_name = unicodedata.normalize('NFC', name).strip()
+        if norm_name in BHOPAL_WARD_MAP:
+            return BHOPAL_WARD_MAP[norm_name]
+    return name
 
 def seed_city(db, config):
     city_name = config["name"]
@@ -50,9 +74,7 @@ def seed_city(db, config):
             
         try:
             ward_name_val = record[ward_name_field]
-            if isinstance(ward_name_val, bytes):
-                ward_name_val = ward_name_val.decode('utf-8', errors='ignore')
-            ward_name = str(ward_name_val).strip()
+            ward_name = clean_ward_name(ward_name_val, city_name)
         except (ValueError, KeyError, TypeError):
             ward_name = f"Ward {ward_num}"
             
@@ -162,6 +184,7 @@ def seed_city(db, config):
         yr_dir = os.path.join(data_dir, str(yr))
         fri_file = os.path.join(yr_dir, "ward_fri_values.csv")
         indices_file = os.path.join(yr_dir, "table_ward_all_indices.csv")
+        pop_file = os.path.join(yr_dir, "table_ward_population.csv")
         
         if not os.path.exists(fri_file) or not os.path.exists(indices_file):
             continue
@@ -201,6 +224,19 @@ def seed_city(db, config):
                 except Exception as e:
                     continue
         
+        # Read yearly population data
+        pop_data = {}
+        if os.path.exists(pop_file):
+            with open(pop_file, 'r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    try:
+                        w_id = int(row['ward_id'])
+                        pop_val = int(row['population'])
+                        pop_data[w_id] = pop_val
+                    except Exception:
+                        continue
+        
         # Rank wards by fri_mean descending
         sorted_wards = sorted(fri_data.keys(), key=lambda w: fri_data[w]['mean'], reverse=True)
         ranks = {w: idx + 1 for idx, w in enumerate(sorted_wards)}
@@ -227,7 +263,8 @@ def seed_city(db, config):
                 fvi_mean=idx_data.get('fvi_mean'),
                 fvi_max=idx_data.get('fvi_max'),
                 category=fri['category'],
-                rank=ranks.get(w_num, 0)
+                rank=ranks.get(w_num, 0),
+                population=pop_data.get(w_num, 0)
             )
             db.add(stats)
         db.commit()
@@ -241,6 +278,7 @@ def seed_data():
     db = SessionLocal()
     
     cities_config = [
+        # Existing Cities
         {
             "name": "Indore",
             "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Indore\indore_wards.shp",
@@ -294,6 +332,112 @@ def seed_data():
             "name": "Punasa",
             "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Punasa\Punasa_wards.shp",
             "data_dir": r"c:\Users\MJ\FloodRisk\data\output_punasa",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        # New Cities
+        {
+            "name": "Barwaha",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Barwaha\Barwaha_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_barwaha",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Bhedaghat",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Bhedaghat\Bhedaghat.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_bhedaghat",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Budni",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Budni\Budni_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_budni",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Dahi",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Dahi\Dahi_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_dahi",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Dhamnod",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Dhamnod\Dhamnod_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_dhamnod",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Dharampuri",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Dharampuri\Dharampuri_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_dharampuri",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Harsud",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Harsud\Harsud_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_harsud",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Kasrawad",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Kasrawad\Kasrawad_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_kasrawad",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Maheshwar",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Maheshwar\Maheshwar_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_maheshwar",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Mandla",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Mandla\Mandla_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_mandla",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Mandleshwar",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Mandleshwar\Mandleshwar_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_mandleshwar",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Nasrullaganj",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Nasrullaganj\Nasrullaganj_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_nasrullaganj",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Nemawar",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Nemawar\Nemawar_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_nemawar",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Omkareshwar",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Omkareshwar\Omkareshwar_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_omkareshwar",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
+        },
+        {
+            "name": "Shahganj",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Shahganj\Shahganj_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_shahganj",
             "ward_number_field": "wardno",
             "ward_name_field": "wardname"
         }
