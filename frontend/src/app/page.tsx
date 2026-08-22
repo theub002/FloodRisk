@@ -45,7 +45,7 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* City Selection */}
-          <div className="space-y-1.5 relative">
+          <div className="space-y-1.5 relative z-50">
             <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-blue-500" /> Choose City
             </label>
@@ -60,11 +60,12 @@ export default function Home() {
               <ChevronDown className={`w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 ${isCityDropdownOpen ? 'rotate-180' : ''}`} />
             </div>
             {isCityDropdownOpen && (
-              <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl max-h-60 overflow-y-auto z-[20000] py-1">
+              <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-2xl max-h-60 overflow-y-auto py-1">
                 {cities.map((c) => (
                   <div
                     key={c.id}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setSelectedCityId(c.id);
                       setIsCityDropdownOpen(false);
                     }}
@@ -78,7 +79,7 @@ export default function Home() {
           </div>
 
           {/* Year Selection */}
-          <div className="space-y-1.5 relative">
+          <div className="space-y-1.5 relative z-40">
             <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-indigo-500" /> Choose Year (1981 - 2024)
             </label>

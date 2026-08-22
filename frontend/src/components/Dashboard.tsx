@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Search, Calendar, ShieldAlert, BarChart3, CloudRain, MapPin, Compass, Eye, TrendingUp, Sun, Moon, ChevronDown, Filter, TriangleAlert, Settings, ArrowLeft, ArrowUp, ArrowDown, Map as MapIcon } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
@@ -52,15 +52,17 @@ export default function Dashboard() {
   const [sortConfig, setSortConfig] = useState<{ key: 'ward_number' | 'rank' | 'population', direction: 'asc' | 'desc' }>({ key: 'ward_number', direction: 'asc' });
   const [mobileView, setMobileView] = useState<'sidebar' | 'map'>('sidebar');
 
+  const router = useRouter();
+
   // Sync state from query parameters on browser navigate (back/forward)
   useEffect(() => {
     const queryCity = searchParams.get('city');
     const queryYear = searchParams.get('year');
-    if (queryCity) setSelectedCityId(Number(queryCity));
-    if (queryYear) setSelectedYear(Number(queryYear));
+    if (queryCity && Number(queryCity) !== selectedCityId) setSelectedCityId(Number(queryCity));
+    if (queryYear && Number(queryYear) !== selectedYear) setSelectedYear(Number(queryYear));
   }, [searchParams]);
 
-  // Sync state changes back to search parameters in URL
+  // Sync state changes back to search parameters in URL using Next.js router
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     let changed = false;
@@ -73,10 +75,9 @@ export default function Dashboard() {
       changed = true;
     }
     if (changed) {
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState(null, '', newUrl);
+      router.replace(`?${params.toString()}`, { scroll: false });
     }
-  }, [selectedCityId, selectedYear]);
+  }, [selectedCityId, selectedYear, router]);
 
   // Fetch Cities
   useEffect(() => {
