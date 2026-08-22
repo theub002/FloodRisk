@@ -440,6 +440,13 @@ def seed_data():
             "data_dir": r"c:\Users\MJ\FloodRisk\data\output_shahganj",
             "ward_number_field": "wardno",
             "ward_name_field": "wardname"
+        },
+        {
+            "name": "Barwani",
+            "shp_path": r"c:\Users\MJ\FloodRisk\Wardwise_Shapefiles\Barwani\Barwani_wards.shp",
+            "data_dir": r"c:\Users\MJ\FloodRisk\data\output_barwani",
+            "ward_number_field": "wardno",
+            "ward_name_field": "wardname"
         }
     ]
     

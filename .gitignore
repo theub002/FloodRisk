@@ -25,3 +25,10 @@ Thumbs.db
 # Scripts
 backend/export_maps.py
 
+# Generated Maps
+Exported_Maps/
+Exported_Maps.zip
+
+# Databases
+*.db
+*.sqlite3

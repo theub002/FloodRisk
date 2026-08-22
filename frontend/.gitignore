@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#services
+export_maps.py
+Exported_Maps.zip
+Exported_Maps/
