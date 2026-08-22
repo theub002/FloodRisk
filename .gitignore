@@ -21,3 +21,7 @@ Thumbs.db
 .vscode/
 .idea/
 .gemini/
+
+# Scripts
+backend/export_maps.py
+
