@@ -32,3 +32,4 @@ Exported_Maps.zip
 # Databases
 *.db
 *.sqlite3
+!backend/floodrisk.db
