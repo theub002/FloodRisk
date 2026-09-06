@@ -186,9 +186,11 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
   const centerIndore: [number, number] = [22.7196, 75.8577];
   const zoomIndore = 11.5;
 
+  const apiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+
   const tileUrl = theme === 'dark'
-    ? "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
-    : "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
+    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`
+    : `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
 
   const categoryCounts = {
     'Very High': 0,
