@@ -187,8 +187,8 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
   const zoomIndore = 11.5;
 
   const tileUrl = theme === 'dark'
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+    ? "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+    : "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}";
 
   const categoryCounts = {
     'Very High': 0,
