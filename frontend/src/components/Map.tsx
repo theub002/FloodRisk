@@ -189,8 +189,8 @@ export default function Map({ geojsonData, selectedWardId, onSelectWard, theme }
   const apiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY;
 
   const tileUrl = theme === 'dark'
-    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`
-    : `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
+    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${apiKey}`
+    : `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${apiKey}`;
 
   const categoryCounts = {
     'Very High': 0,
