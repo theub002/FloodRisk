@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { FullPageLoader } from '@/components/LoadingSpinner';
 
 const Dashboard = dynamic(() => import('@/components/Dashboard'), {
   ssr: false,
@@ -9,7 +10,7 @@ const Dashboard = dynamic(() => import('@/components/Dashboard'), {
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-500 bg-slate-50 min-h-screen flex items-center justify-center">Loading Dashboard...</div>}>
+    <Suspense fallback={<FullPageLoader message="Preparing FloodRisk dashboard" submessage="Loading map and analysis tools…" />}>
       <Dashboard />
     </Suspense>
   );

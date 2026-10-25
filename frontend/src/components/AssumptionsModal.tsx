@@ -20,8 +20,8 @@ export default function AssumptionsModal({ onClose, theme }: { onClose: () => vo
             <Settings className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold font-mono tracking-wider text-blue-500 uppercase">Assumptions & Methodology</h2>
-            <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Underlying assumptions in the FRI calculation</p>
+            <h2 className="text-sm font-bold font-mono tracking-wider text-blue-500 uppercase">Assumptions</h2>
+            <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Assumptions in this FRI calculation</p>
           </div>
         </div>
 

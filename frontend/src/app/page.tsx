@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShieldAlert, MapPin, Calendar, ChevronDown, Sun, Moon } from 'lucide-react';
+import { FullPageLoader } from '@/components/LoadingSpinner';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -14,16 +15,18 @@ export default function Home() {
   const [selectedYear, setSelectedYear] = useState<number>(2024);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+  const [citiesLoading, setCitiesLoading] = useState(true);
 
   // Fetch Cities from API
   useEffect(() => {
     fetch(`${API_BASE}/api/cities`)
-      .then((res) => res.json())
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
       .then((data) => {
         setCities(data);
         if (data.length > 0) setSelectedCityId(data[0].id);
       })
-      .catch((err) => console.error("Error fetching cities", err));
+      .catch((err) => console.error("Error fetching cities", err))
+      .finally(() => setCitiesLoading(false));
   }, []);
 
   const yearsRange = Array.from({ length: 2024 - 1981 + 1 }, (_, i) => 1981 + i);
@@ -33,6 +36,8 @@ export default function Home() {
   };
 
   return (
+    <>
+    {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading available cities…" />}
     <div className={`${theme} min-h-screen flex items-center justify-center p-4 bg-[var(--background)] transition-colors duration-200`}>
       <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-visible p-8 space-y-6 flex flex-col">
         <div className="text-center space-y-2">
@@ -114,9 +119,11 @@ export default function Home() {
 
         <button
           onClick={handleLaunch}
-          className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 text-sm cursor-pointer"
+          disabled={citiesLoading || cities.length === 0}
+          aria-busy={citiesLoading}
+          className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 text-sm cursor-pointer"
         >
-          Launch GIS Analytics Map
+          {citiesLoading ? 'Connecting to server…' : cities.length === 0 ? 'No cities available' : 'Launch GIS Analytics Map'}
         </button>
         
         <div className="flex justify-between items-center text-xs text-[var(--muted-foreground)] border-t border-[var(--border)] pt-4">
@@ -134,5 +141,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }

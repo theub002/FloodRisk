@@ -10,15 +10,19 @@ import TerrainModal from './TerrainModal';
 import RainfallModal from './RainfallModal';
 import AssumptionsModal from './AssumptionsModal';
 import LimitationsModal from './LimitationsModal';
+import { FullPageLoader, OverlayLoader } from './LoadingSpinner';
 
 // Dynamically load the Leaflet Map component to bypass SSR errors in Next.js App Router
 const Map = dynamic(() => import('./Map'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full rounded-xl border border-[var(--border)] bg-[var(--card)] flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-[var(--muted-foreground)] text-xs font-medium">Initializing Map Module...</p>
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative w-14 h-14">
+          <div className="absolute inset-0 rounded-full border-[3px] border-blue-500/20" />
+          <div className="absolute inset-0 rounded-full border-[3px] border-blue-500 border-t-transparent animate-spin" />
+        </div>
+        <p className="text-[var(--muted-foreground)] text-sm font-medium">Initializing Map Module...</p>
       </div>
     </div>
   ),
@@ -40,6 +44,9 @@ export default function Dashboard() {
   const [geojsonData, setGeojsonData] = useState<any>(null);
   const [rainfallData, setRainfallData] = useState<any>(null);
   const [terrainStats, setTerrainStats] = useState<any>(null);
+  const [citiesLoading, setCitiesLoading] = useState(true);
+  const [wardsLoading, setWardsLoading] = useState(true);
+  const [cityDataLoading, setCityDataLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   const [activeSidebarTab, setActiveSidebarTab] = useState<'city' | 'ward'>('city');
@@ -82,35 +89,40 @@ export default function Dashboard() {
   // Fetch Cities
   useEffect(() => {
     fetch(`${API_BASE}/api/cities`)
-      .then((res) => res.json())
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
       .then((data) => {
         setCities(data);
         if (data.length > 0 && !searchParams.get('city')) setSelectedCityId(data[0].id);
       })
-      .catch((err) => console.error("Error fetching cities", err));
+      .catch((err) => console.error("Error fetching cities", err))
+      .finally(() => setCitiesLoading(false));
   }, []);
 
   // Fetch Terrain Stats & Rainfall history for the selected city
   useEffect(() => {
     if (!selectedCityId) return;
+    setCityDataLoading(true);
+    let pending = 2;
+    const finish = () => { pending -= 1; if (pending === 0) setCityDataLoading(false); };
 
     fetch(`${API_BASE}/api/terrain?city_id=${selectedCityId}`)
-      .then((res) => res.json())
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
       .then((data) => setTerrainStats(data))
-      .catch((err) => console.error("Error fetching terrain", err));
+      .catch((err) => console.error("Error fetching terrain", err)).finally(finish);
 
     fetch(`${API_BASE}/api/rainfall?city_id=${selectedCityId}`)
-      .then((res) => res.json())
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
       .then((data) => setRainfallData(data))
-      .catch((err) => console.error("Error fetching rainfall", err));
+      .catch((err) => console.error("Error fetching rainfall", err)).finally(finish);
   }, [selectedCityId]);
 
   // Fetch Wards geojson + FRI stats for selected city and year
   useEffect(() => {
     if (!selectedCityId || !selectedYear) return;
+    setWardsLoading(true);
 
     fetch(`${API_BASE}/api/wards?city_id=${selectedCityId}&year=${selectedYear}`)
-      .then((res) => res.json())
+      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
       .then((data) => {
         setGeojsonData(data);
         // Reset or update selected ward details if it exists in new year data
@@ -119,7 +131,8 @@ export default function Dashboard() {
           if (!exists) setSelectedWard(null);
         }
       })
-      .catch((err) => console.error("Error fetching wards geojson", err));
+      .catch((err) => console.error("Error fetching wards geojson", err))
+      .finally(() => setWardsLoading(false));
   }, [selectedCityId, selectedYear]);
 
   // Get selected ward stats for the sidebar
@@ -179,6 +192,7 @@ export default function Dashboard() {
 
   return (
     <div className={`${theme} flex flex-col h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200`}>
+      {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading cities and dashboard data…" />}
 
       {/* Top Header Navigation */}
       <header className="flex flex-col md:flex-row justify-between items-center px-6 py-4 border-b border-[var(--border)] bg-[var(--card)]/85 backdrop-blur-md z-10 gap-4">
@@ -749,6 +763,7 @@ export default function Dashboard() {
             onSelectWard={handleSelectWard}
             theme={theme}
           />
+          {(wardsLoading || cityDataLoading) && <OverlayLoader message={wardsLoading ? `Loading wards for ${selectedYear}…` : 'Loading city terrain and rainfall…'} />}
         </section>
 
       </main>
