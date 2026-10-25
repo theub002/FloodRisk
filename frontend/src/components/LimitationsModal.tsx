@@ -95,7 +95,7 @@ export default function LimitationsModal({ onClose, theme }: { onClose: () => vo
             </div>
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h3 className={`text-xs font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-blue-400 border-blue-900' : 'text-blue-600 border-blue-100'} border-b pb-1`}>🏗 Infrastructure Data</h3>
             <div className={`p-3 rounded-lg text-sm space-y-3 ${theme === 'dark' ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
               <div className={`p-2 border-l-2 ${theme === 'dark' ? 'border-blue-500 bg-blue-500/10' : 'border-blue-500 bg-blue-50'}`}>
@@ -103,7 +103,7 @@ export default function LimitationsModal({ onClose, theme }: { onClose: () => vo
                 <p>The methodology is entirely terrain and rainfall-based, with <strong>no data on stormwater drain networks, culvert capacities, road underpasses, or pumping stations</strong> — the primary determinants of urban flooding in built-up cities.</p>
               </div>
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>

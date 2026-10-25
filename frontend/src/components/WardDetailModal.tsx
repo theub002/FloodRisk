@@ -111,7 +111,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
             </div>
             <div className="bg-[var(--secondary)] p-4 rounded-xl border border-[var(--border)]">
               <div className="text-[var(--muted-foreground)] text-xs flex items-center gap-1.5 mb-1.5 font-semibold">
-                <ShieldAlert className="w-3.5 h-3.5 text-red-650" /> City Rank
+                <ShieldAlert className="w-3.5 h-3.5 text-red-650" /> Ward Rank
               </div>
               <div className="text-lg font-bold font-mono text-red-500">
                 #{currentStats.rank} <span className="text-xs text-[var(--muted-foreground)] font-normal">/ 85</span>

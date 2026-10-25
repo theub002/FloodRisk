@@ -48,7 +48,7 @@ export default function AssumptionsModal({ onClose, theme }: { onClose: () => vo
             <div className={`p-3 rounded-lg text-sm space-y-3 ${theme === 'dark' ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
               <p><strong>Equal Sub-Index Weights:</strong> All three sub-indices are assumed to be equally important in the final FRI. The multiplicative combination FRI = FHI × FEI × FVI assigns equal conceptual weight to hazard, exposure, and vulnerability.</p>
               <p><strong>Flood Hazard Index (FHI):</strong> The three components — runoff, slope, and wet days — are assumed to contribute equally. Each is scored 1–5, summed without differential weighting before rescaling.</p>
-              <p><strong>Flood Vulnerability Index (FVI):</strong> Distance to water is given a weight of 0.85 while all other four components are weighted 1.0. The score bins for runoff (650, 850, 1100, 1350 mm) are stated in code as derived from 2020 annual runoff range.</p>
+              <p><strong>Flood Vulnerability Index (FVI):</strong> Distance to water is given a weight of 0.85 while all other four components are weighted 1.0. The score bins for runoff (650, 850, 1100, 1350 mm) are stated in code as derived from 2020 annual runoff range. Stormwater details were unavailable; therefore, we assumed that the floodwater flows into the sewer system or open drains.</p>
             </div>
           </div>
 

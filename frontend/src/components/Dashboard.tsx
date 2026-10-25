@@ -728,7 +728,7 @@ export default function Dashboard() {
                   }`}
               >
                 <Settings className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
-                <span className="text-[10px] font-bold">Assumes</span>
+                <span className="text-[10px] font-bold">Assumptions</span>
               </button>
               <button
                 onClick={() => setActiveModal('limitations')}
@@ -738,7 +738,7 @@ export default function Dashboard() {
                   }`}
               >
                 <TriangleAlert className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
-                <span className="text-[10px] font-bold leading-tight text-center">Limits</span>
+                <span className="text-[10px] font-bold leading-tight text-center">Limitations</span>
               </button>
             </div>
           </div>
