@@ -188,7 +188,7 @@ export default function Dashboard() {
             <img src="/iiti_logo.png" alt="IIT Indore Logo" width={40} height={40} style={{ objectFit: 'contain', width: '100%', height: '100%' }} />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight">URBAN FLOOD RISK INDEX GIS PLATFORM</h1>
+            <h1 className="text-lg font-bold tracking-tight">URBAN FLOOD RISK INDEX</h1>
             <p className="text-xs text-[var(--muted-foreground)]">Ward-Wise FRI Visualization, IIT Indore.</p>
           </div>
         </div>
@@ -248,8 +248,8 @@ export default function Dashboard() {
             <button
               onClick={() => setActiveSidebarTab('city')}
               className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 border-b-2 transition-all ${activeSidebarTab === 'city'
-                  ? 'border-blue-500 text-blue-600 bg-blue-500/5'
-                  : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                ? 'border-blue-500 text-blue-600 bg-blue-500/5'
+                : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
             >
               <Compass className="w-4 h-4" /> City Overview
@@ -257,8 +257,8 @@ export default function Dashboard() {
             <button
               onClick={() => setActiveSidebarTab('ward')}
               className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 border-b-2 transition-all ${activeSidebarTab === 'ward'
-                  ? 'border-blue-500 text-blue-600 bg-blue-500/5'
-                  : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                ? 'border-blue-500 text-blue-600 bg-blue-500/5'
+                : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
             >
               <BarChart3 className="w-4 h-4" /> Ward Overview
@@ -639,48 +639,48 @@ export default function Dashboard() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--border)]">
-                           {filteredWards.length > 0 ? (
-                             filteredWards.map((w: any) => {
-                               const isSelected = selectedWard?.id === w.ward_id;
-                               return (
-                                 <tr
-                                   key={w.ward_id}
-                                   onClick={() => handleSelectWard(w.ward_id, w.ward_name)}
-                                   className={`cursor-pointer transition-colors ${isSelected
-                                       ? 'bg-blue-500/10 hover:bg-blue-500/15'
-                                       : 'hover:bg-[var(--secondary)]'
-                                     }`}
-                                 >
-                                   <td className="py-2.5 px-3">
-                                     <div className="font-semibold text-[var(--foreground)]">Ward {w.ward_number}</div>
-                                     <div className="text-[10px] text-[var(--muted-foreground)]">{w.ward_name}</div>
-                                   </td>
-                                   <td className="py-2.5 px-2 text-right font-mono font-semibold text-[var(--foreground)]">
-                                     {w.population ? w.population.toLocaleString() : '0'}
-                                   </td>
-                                   <td className="py-2.5 px-3">
-                                     <span className="font-mono font-bold mr-1.5 text-[var(--foreground)]">{w.fri_mean.toFixed(2)}</span>
-                                     <span
-                                       className="text-[9px] px-1 rounded-sm font-bold uppercase tracking-wider"
-                                       style={{ backgroundColor: `${getCategoryColor(w.category)}15`, color: getCategoryColor(w.category) }}
-                                     >
-                                       {w.category}
-                                     </span>
-                                   </td>
-                                   <td className="py-2.5 px-3 text-right font-mono font-semibold text-[var(--muted-foreground)]">
-                                     #{w.rank}
-                                   </td>
-                                 </tr>
-                               );
-                             })
-                           ) : (
-                             <tr>
-                               <td colSpan={4} className="py-8 text-center text-[var(--muted-foreground)]">
-                                 No matching Wards found
-                               </td>
-                             </tr>
-                           )}
-                         </tbody>
+                          {filteredWards.length > 0 ? (
+                            filteredWards.map((w: any) => {
+                              const isSelected = selectedWard?.id === w.ward_id;
+                              return (
+                                <tr
+                                  key={w.ward_id}
+                                  onClick={() => handleSelectWard(w.ward_id, w.ward_name)}
+                                  className={`cursor-pointer transition-colors ${isSelected
+                                    ? 'bg-blue-500/10 hover:bg-blue-500/15'
+                                    : 'hover:bg-[var(--secondary)]'
+                                    }`}
+                                >
+                                  <td className="py-2.5 px-3">
+                                    <div className="font-semibold text-[var(--foreground)]">Ward {w.ward_number}</div>
+                                    <div className="text-[10px] text-[var(--muted-foreground)]">{w.ward_name}</div>
+                                  </td>
+                                  <td className="py-2.5 px-2 text-right font-mono font-semibold text-[var(--foreground)]">
+                                    {w.population ? w.population.toLocaleString() : '0'}
+                                  </td>
+                                  <td className="py-2.5 px-3">
+                                    <span className="font-mono font-bold mr-1.5 text-[var(--foreground)]">{w.fri_mean.toFixed(2)}</span>
+                                    <span
+                                      className="text-[9px] px-1 rounded-sm font-bold uppercase tracking-wider"
+                                      style={{ backgroundColor: `${getCategoryColor(w.category)}15`, color: getCategoryColor(w.category) }}
+                                    >
+                                      {w.category}
+                                    </span>
+                                  </td>
+                                  <td className="py-2.5 px-3 text-right font-mono font-semibold text-[var(--muted-foreground)]">
+                                    #{w.rank}
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          ) : (
+                            <tr>
+                              <td colSpan={4} className="py-8 text-center text-[var(--muted-foreground)]">
+                                No matching Wards found
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
                       </table>
                     </div>
 
@@ -695,52 +695,47 @@ export default function Dashboard() {
         {/* Center/Right Area: Leaflet Map Container */}
         <section className={`${mobileView === 'sidebar' ? 'hidden' : 'block'} md:block flex-1 p-5 bg-[var(--background)]/20 relative`}>
           {/* Floating Action Buttons on the Right over the Map */}
-          <div className={`absolute top-8 right-8 z-[1000] backdrop-blur-md p-2.5 rounded-2xl shadow-xl border transition-colors duration-200 ${
-            theme === 'dark' 
-              ? 'bg-slate-900/90 border-slate-700/60' 
+          <div className={`absolute top-8 right-8 z-[1000] backdrop-blur-md p-2.5 rounded-2xl shadow-xl border transition-colors duration-200 ${theme === 'dark'
+              ? 'bg-slate-900/90 border-slate-700/60'
               : 'bg-white/90 border-gray-200'
-          }`}>
+            }`}>
             <div className="flex flex-col gap-2.5 w-[85px]">
-              <button 
-                onClick={() => setActiveModal('terrain')} 
-                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
-                  theme === 'dark'
+              <button
+                onClick={() => setActiveModal('terrain')}
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${theme === 'dark'
                     ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-200'
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
-                }`}
+                  }`}
               >
                 <Compass className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
                 <span className="text-[10px] font-bold">Terrain</span>
               </button>
-              <button 
-                onClick={() => setActiveModal('rainfall')} 
-                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
-                  theme === 'dark'
+              <button
+                onClick={() => setActiveModal('rainfall')}
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${theme === 'dark'
                     ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-200'
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
-                }`}
+                  }`}
               >
                 <CloudRain className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
                 <span className="text-[10px] font-bold">Rainfall</span>
               </button>
-              <button 
-                onClick={() => setActiveModal('assumptions')} 
-                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
-                  theme === 'dark'
+              <button
+                onClick={() => setActiveModal('assumptions')}
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${theme === 'dark'
                     ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-300'
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
-                }`}
+                  }`}
               >
                 <Settings className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
                 <span className="text-[10px] font-bold">Assumes</span>
               </button>
-              <button 
-                onClick={() => setActiveModal('limitations')} 
-                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${
-                  theme === 'dark'
+              <button
+                onClick={() => setActiveModal('limitations')}
+                className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[14px] border transition-all shadow-sm ${theme === 'dark'
                     ? 'bg-slate-800 border-slate-700/40 hover:bg-slate-700 text-slate-300'
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
-                }`}
+                  }`}
               >
                 <TriangleAlert className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
                 <span className="text-[10px] font-bold leading-tight text-center">Limits</span>
