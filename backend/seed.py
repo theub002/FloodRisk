@@ -57,8 +57,9 @@ def seed_city(db, config):
                 pop = int(row['population'])
                 ward_pop[w_id] = pop
     
-    # Insert Wards into database
-    wards_by_number = {}
+    # Collect all shape records grouped by ward number to handle duplicates
+    # (e.g., Bhopal ward 76 has two separate polygon records that need merging)
+    ward_records = {}  # ward_num -> { name, geometries[], pop }
     for sr in sf.shapeRecords():
         record = sr.record
         shape = sr.shape
@@ -86,12 +87,43 @@ def seed_city(db, config):
         
         pop = ward_pop.get(ward_num, 0)
         
+        if ward_num not in ward_records:
+            ward_records[ward_num] = {
+                'name': ward_name,
+                'geometries': [geometry],
+                'pop': pop
+            }
+        else:
+            # Duplicate ward number found — collect geometry for merging
+            ward_records[ward_num]['geometries'].append(geometry)
+    
+    # Insert Wards into database, merging duplicate geometries into MultiPolygon
+    wards_by_number = {}
+    for ward_num, data in ward_records.items():
+        geometries = data['geometries']
+        
+        if len(geometries) == 1:
+            merged_geometry = geometries[0]
+        else:
+            # Merge multiple geometries into a single MultiPolygon
+            all_polygons = []
+            for geom in geometries:
+                if geom['type'] == 'Polygon':
+                    all_polygons.append(geom['coordinates'])
+                elif geom['type'] == 'MultiPolygon':
+                    all_polygons.extend(geom['coordinates'])
+            merged_geometry = {
+                'type': 'MultiPolygon',
+                'coordinates': all_polygons
+            }
+            print(f"  Merged {len(geometries)} shapes for ward {ward_num} ({data['name']}) into MultiPolygon with {len(all_polygons)} polygons")
+        
         ward = Ward(
             city_id=city.id,
             ward_number=ward_num,
-            name=ward_name,
-            geometry=geometry,
-            population=pop
+            name=data['name'],
+            geometry=merged_geometry,
+            population=data['pop']
         )
         db.add(ward)
         wards_by_number[ward_num] = ward
