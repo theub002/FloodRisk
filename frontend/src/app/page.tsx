@@ -9,13 +9,23 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export default function Home() {
   const router = useRouter();
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    return window.localStorage.getItem('floodrisk-theme') === 'dark' ? 'dark' : 'light';
+  });
   const [cities, setCities] = useState<any[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<number>(1);
   const [selectedYear, setSelectedYear] = useState<number>(2024);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [citiesLoading, setCitiesLoading] = useState(true);
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem('floodrisk-theme');
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      setTheme(storedTheme);
+    }
+  }, []);
 
   // Fetch Cities from API
   useEffect(() => {
@@ -37,7 +47,7 @@ export default function Home() {
 
   return (
     <>
-    {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading available cities…" />}
+    {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading available cities…" theme={theme} />}
     <div className={`${theme} min-h-screen flex items-center justify-center p-4 bg-[var(--background)] transition-colors duration-200`}>
       <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-visible p-8 space-y-6 flex flex-col">
         <div className="text-center space-y-2">
@@ -129,7 +139,11 @@ export default function Home() {
         <div className="flex justify-between items-center text-xs text-[var(--muted-foreground)] border-t border-[var(--border)] pt-4">
           <span>Theme Preference:</span>
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => {
+              const nextTheme = theme === 'dark' ? 'light' : 'dark';
+              setTheme(nextTheme);
+              window.localStorage.setItem('floodrisk-theme', nextTheme);
+            }}
             className="px-3 py-1.5 bg-[var(--background)] border border-[var(--border)] rounded-lg hover:bg-[var(--secondary)] transition-all flex items-center gap-1.5 font-semibold cursor-pointer"
           >
             {theme === 'dark' ? (

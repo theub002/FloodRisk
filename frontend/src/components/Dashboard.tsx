@@ -35,7 +35,10 @@ export default function Dashboard() {
   const initialCityId = searchParams.get('city') ? Number(searchParams.get('city')) : 1;
   const initialYear = searchParams.get('year') ? Number(searchParams.get('year')) : 2024;
 
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    return window.localStorage.getItem('floodrisk-theme') === 'dark' ? 'dark' : 'light';
+  });
   const [cities, setCities] = useState<any[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<number>(initialCityId);
   const [selectedYear, setSelectedYear] = useState<number>(initialYear);
@@ -60,6 +63,13 @@ export default function Dashboard() {
   const [mobileView, setMobileView] = useState<'sidebar' | 'map'>('sidebar');
 
   const router = useRouter();
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem('floodrisk-theme');
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      setTheme(storedTheme);
+    }
+  }, []);
 
   // Sync state from query parameters on browser navigate (back/forward)
   useEffect(() => {
@@ -192,7 +202,7 @@ export default function Dashboard() {
 
   return (
     <div className={`${theme} flex flex-col h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200`}>
-      {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading cities and dashboard data…" />}
+      {citiesLoading && <FullPageLoader message="Connecting to FloodRisk" submessage="Loading cities and dashboard data…" theme={theme} />}
 
       {/* Top Header Navigation */}
       <header className="flex flex-col md:flex-row justify-between items-center px-6 py-4 border-b border-[var(--border)] bg-[var(--card)]/85 backdrop-blur-md z-10 gap-4">
@@ -242,7 +252,11 @@ export default function Dashboard() {
 
           {/* Theme Toggle Button */}
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => {
+              const nextTheme = theme === 'dark' ? 'light' : 'dark';
+              setTheme(nextTheme);
+              window.localStorage.setItem('floodrisk-theme', nextTheme);
+            }}
             className="p-2 bg-[var(--card)] hover:bg-[var(--secondary)] border border-[var(--border)] rounded-xl transition-all shadow-sm flex items-center justify-center cursor-pointer"
             title="Toggle theme"
           >

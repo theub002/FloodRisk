@@ -1,14 +1,44 @@
 'use client';
 
 import { ShieldAlert } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+type Theme = 'light' | 'dark';
 
 /**
  * Full-screen loading overlay — used when the entire app is waiting
  * for the backend to respond (initial boot, page transitions).
  */
-export function FullPageLoader({ message = 'Loading...', submessage }: { message?: string; submessage?: string }) {
+export function FullPageLoader({
+  message = 'Loading...',
+  submessage,
+  theme,
+}: {
+  message?: string;
+  submessage?: string;
+  theme?: Theme;
+}) {
+  const [resolvedTheme, setResolvedTheme] = useState<Theme>(() => {
+    if (theme) return theme;
+    if (typeof window === 'undefined') return 'light';
+    const storedTheme = window.localStorage.getItem('floodrisk-theme');
+    return storedTheme === 'dark' ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    if (theme) {
+      setResolvedTheme(theme);
+      return;
+    }
+
+    const storedTheme = window.localStorage.getItem('floodrisk-theme');
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      setResolvedTheme(storedTheme);
+    }
+  }, [theme]);
+
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-[var(--background)] animate-fade-in">
+    <div className={`${resolvedTheme} fixed inset-0 z-[99999] flex items-center justify-center bg-[var(--background)] animate-fade-in`}>
       <div className="flex flex-col items-center gap-7">
         {/* Ripple spinner */}
         <div className="relative w-20 h-20">
@@ -45,7 +75,7 @@ export function FullPageLoader({ message = 'Loading...', submessage }: { message
  */
 export function OverlayLoader({ message = 'Loading data...' }: { message?: string }) {
   return (
-    <div className="absolute inset-0 z-[500] flex items-center justify-center bg-[var(--background)]/60 backdrop-blur-[2px] animate-fade-in rounded-xl">
+    <div className="absolute inset-0 z-[500] flex items-center justify-center bg-[var(--background)] animate-fade-in rounded-xl">
       <div className="flex flex-col items-center gap-5 animate-slide-up">
         <div className="relative w-14 h-14">
           <div className="absolute inset-0 rounded-full border-[3px] border-blue-500/20" />
