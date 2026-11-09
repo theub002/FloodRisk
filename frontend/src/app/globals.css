@@ -65,6 +65,31 @@
   --glass-shadow: rgba(0, 0, 0, 0.3);
 }
 
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+html::-webkit-scrollbar {
+  width: 12px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border: 3px solid #f1f5f9;
+  border-radius: 6px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden;
@@ -90,6 +115,15 @@ body {
 .leaflet-container {
   background: var(--background) !important;
   font-family: inherit;
+}
+
+/* Hide Leaflet bottom attribution watermark/flag */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.reports-map .leaflet-control-attribution {
+  display: block !important;
 }
 
 .leaflet-bar {

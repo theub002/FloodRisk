@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Search, Calendar, ShieldAlert, BarChart3, CloudRain, MapPin, Compass, Eye, TrendingUp, Sun, Moon, ChevronDown, Filter, TriangleAlert, Settings, ArrowLeft, ArrowUp, ArrowDown, Map as MapIcon } from 'lucide-react';
+import { Search, Sun, Moon, ArrowLeft, ArrowUp, ArrowDown } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
 import WardDetailModal from './WardDetailModal';
 import TerrainModal from './TerrainModal';
@@ -35,10 +35,8 @@ export default function Dashboard() {
   const initialCityId = searchParams.get('city') ? Number(searchParams.get('city')) : 1;
   const initialYear = searchParams.get('year') ? Number(searchParams.get('year')) : 2024;
 
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') return 'light';
-    return window.localStorage.getItem('floodrisk-theme') === 'dark' ? 'dark' : 'light';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [mounted, setMounted] = useState(false);
   const [cities, setCities] = useState<any[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<number>(initialCityId);
   const [selectedYear, setSelectedYear] = useState<number>(initialYear);
@@ -65,6 +63,7 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
     const storedTheme = window.localStorage.getItem('floodrisk-theme');
     if (storedTheme === 'light' || storedTheme === 'dark') {
       setTheme(storedTheme);
@@ -217,10 +216,18 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push('/')}
+            className="p-2 bg-[var(--card)] hover:bg-[var(--secondary)] border border-[var(--border)] rounded-xl transition-all shadow-xs flex items-center justify-center cursor-pointer text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            title="Back to Landing Page"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+
           {/* City Selector */}
           <div className="flex items-center gap-2 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2">
-            <MapPin className="text-blue-500 w-4 h-4" />
+            
             <select
               value={selectedCityId}
               onChange={(e) => setSelectedCityId(Number(e.target.value))}
@@ -236,7 +243,7 @@ export default function Dashboard() {
 
           {/* Year Selector */}
           <div className="flex items-center gap-2 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2">
-            <Calendar className="text-indigo-500 w-4 h-4" />
+            
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
@@ -250,6 +257,16 @@ export default function Dashboard() {
             </select>
           </div>
 
+          {/* Report Flood Action Button */}
+          <button
+            onClick={() => router.push('/report')}
+            className="flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-500 active:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+            title="Report a flood incident in this region"
+          >
+            
+            <span className="hidden sm:inline">Report Flood</span>
+          </button>
+
           {/* Theme Toggle Button */}
           <button
             onClick={() => {
@@ -260,7 +277,11 @@ export default function Dashboard() {
             className="p-2 bg-[var(--card)] hover:bg-[var(--secondary)] border border-[var(--border)] rounded-xl transition-all shadow-sm flex items-center justify-center cursor-pointer"
             title="Toggle theme"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-500" />}
+            {mounted ? (
+              theme === 'dark' ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-500" />
+            ) : (
+              <div className="w-4 h-4" />
+            )}
           </button>
         </div>
       </header>
@@ -280,7 +301,7 @@ export default function Dashboard() {
                 : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
             >
-              <Compass className="w-4 h-4" /> City Overview
+               City Overview
             </button>
             <button
               onClick={() => setActiveSidebarTab('ward')}
@@ -289,7 +310,7 @@ export default function Dashboard() {
                 : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
             >
-              <BarChart3 className="w-4 h-4" /> Ward Overview
+               Ward Overview
             </button>
           </div>
 
@@ -305,7 +326,7 @@ export default function Dashboard() {
                 {geojsonData && (
                   <div className="space-y-3 mb-6">
                     <h3 className="text-sm font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5 uppercase tracking-wide">
-                      <BarChart3 className="w-4 h-4 text-blue-600" /> City Statistics
+                       City Statistics
                     </h3>
                     {(() => {
                       const wards = geojsonData.features?.map((f: any) => f.properties) || [];
@@ -368,7 +389,7 @@ export default function Dashboard() {
                 {terrainStats && terrainStats.slope_mean !== undefined && (
                   <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5 uppercase tracking-wide">
-                      <Compass className="w-4 h-4 text-blue-600" /> Terrain Profile
+                       Terrain Profile
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-[var(--secondary)] p-3 rounded-lg border border-[var(--border)]">
@@ -403,7 +424,7 @@ export default function Dashboard() {
                 {rainfallData && rainfallData.rainfall && (
                   <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5 uppercase tracking-wide">
-                      <CloudRain className="w-4 h-4 text-blue-600" /> Wet Days Trends
+                       Wet Days Trends
                     </h3>
                     <div className="h-[180px] bg-[var(--secondary)] p-2 rounded-lg border border-[var(--border)]">
                       <ResponsiveContainer width="100%" height="100%">
@@ -423,7 +444,7 @@ export default function Dashboard() {
                 {rainfallData && rainfallData.rainfall && (
                   <div className="space-y-3">
                     <h3 className="text-sm font-semibold text-[var(--muted-foreground)] flex items-center gap-1.5 uppercase tracking-wide">
-                      <CloudRain className="w-4 h-4 text-blue-600" /> Monthly Rainfall ({selectedYear})
+                       Monthly Rainfall ({selectedYear})
                     </h3>
                     {(() => {
                       const currentYearRain = rainfallData.rainfall.find((r: any) => r.year === selectedYear);
@@ -474,7 +495,7 @@ export default function Dashboard() {
                 {/* Advanced Filters (Always visible) */}
                 <div className="bg-[var(--secondary)] p-3 rounded-xl border border-[var(--border)] space-y-3">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider mb-2">
-                    <Filter className="w-3.5 h-3.5" /> Advanced Filters
+                     Advanced Filters
                   </div>
                   <div className="grid grid-cols-1 gap-2">
                     <select
@@ -615,7 +636,7 @@ export default function Dashboard() {
                       onClick={() => setShowTrendModal(true)}
                       className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-900/10 text-sm"
                     >
-                      <Eye className="w-4 h-4" /> View Historical Trends (1981 - 2024)
+                       View Historical Trends (1981 - 2024)
                     </button>
 
                   </div>
@@ -735,7 +756,7 @@ export default function Dashboard() {
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
                   }`}
               >
-                <Compass className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
+                
                 <span className="text-[10px] font-bold">Terrain</span>
               </button>
               <button
@@ -745,7 +766,7 @@ export default function Dashboard() {
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#202124]'
                   }`}
               >
-                <CloudRain className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-blue-400' : 'text-[#1a73e8]'}`} strokeWidth={2} />
+                
                 <span className="text-[10px] font-bold">Rainfall</span>
               </button>
               <button
@@ -755,7 +776,7 @@ export default function Dashboard() {
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
                   }`}
               >
-                <Settings className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
+                
                 <span className="text-[10px] font-bold">Assumptions</span>
               </button>
               <button
@@ -765,7 +786,7 @@ export default function Dashboard() {
                     : 'bg-[#F8F9FA] border-gray-200/60 hover:bg-[#F0F2F5] text-[#334155]'
                   }`}
               >
-                <TriangleAlert className={`w-5 h-5 transition-colors ${theme === 'dark' ? 'text-slate-400' : 'text-[#475569]'}`} strokeWidth={2} />
+                
                 <span className="text-[10px] font-bold leading-tight text-center">Limitations</span>
               </button>
             </div>
@@ -790,12 +811,12 @@ export default function Dashboard() {
         >
           {mobileView === 'sidebar' ? (
             <>
-              <MapIcon className="w-4 h-4" />
+              
               <span>View Map</span>
             </>
           ) : (
             <>
-              <BarChart3 className="w-4 h-4" />
+              
               <span>View Stats</span>
             </>
           )}

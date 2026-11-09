@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { X, TrendingUp, ShieldAlert, Users, Layers } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line, Legend } from 'recharts';
 
 interface WardDetailModalProps {
@@ -65,7 +65,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
         <div className="flex justify-between items-center px-6 py-4 border-b border-[var(--border)] bg-[var(--secondary)]">
           <div>
             <h2 className="text-xl font-bold text-[var(--foreground)] flex items-center gap-2">
-              <ShieldAlert className="text-blue-600 w-5 h-5" />
+              
               Ward {data.ward_number}: {data.ward_name}
             </h2>
             <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Historical Analysis & Trend Analysis (1981 - 2024)</p>
@@ -84,7 +84,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-[var(--secondary)] p-4 rounded-xl border border-[var(--border)]">
               <div className="text-[var(--muted-foreground)] text-xs flex items-center gap-1.5 mb-1.5 font-semibold">
-                <Users className="w-3.5 h-3.5 text-blue-600" /> Wards Population
+                 Wards Population
               </div>
               <div className="text-lg font-bold font-mono text-[var(--foreground)]">
                 {data.population.toLocaleString()}
@@ -92,7 +92,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
             </div>
             <div className="bg-[var(--secondary)] p-4 rounded-xl border border-[var(--border)]">
               <div className="text-[var(--muted-foreground)] text-xs flex items-center gap-1.5 mb-1.5 font-semibold">
-                <TrendingUp className="w-3.5 h-3.5 text-indigo-650" /> Latest FRI Mean
+                 Latest FRI Mean
               </div>
               <div className="text-lg font-bold font-mono text-indigo-500">
                 {currentStats.fri_mean?.toFixed(2)}
@@ -100,7 +100,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
             </div>
             <div className="bg-[var(--secondary)] p-4 rounded-xl border border-[var(--border)]">
               <div className="text-[var(--muted-foreground)] text-xs flex items-center gap-1.5 mb-1.5 font-semibold">
-                <Layers className="w-3.5 h-3.5 text-yellow-600" /> Latest Category
+                 Latest Category
               </div>
               <div 
                 className="text-lg font-bold"
@@ -111,7 +111,7 @@ export default function WardDetailModal({ wardId, wardName, onClose, theme }: Wa
             </div>
             <div className="bg-[var(--secondary)] p-4 rounded-xl border border-[var(--border)]">
               <div className="text-[var(--muted-foreground)] text-xs flex items-center gap-1.5 mb-1.5 font-semibold">
-                <ShieldAlert className="w-3.5 h-3.5 text-red-650" /> Ward Rank
+                 Ward Rank
               </div>
               <div className="text-lg font-bold font-mono text-red-500">
                 #{currentStats.rank} <span className="text-xs text-[var(--muted-foreground)] font-normal">/ 85</span>

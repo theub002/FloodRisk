@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Settings } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function AssumptionsModal({ onClose, theme }: { onClose: () => void, theme: string }) {
   return (
@@ -16,9 +16,7 @@ export default function AssumptionsModal({ onClose, theme }: { onClose: () => vo
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-500">
-            <Settings className="w-5 h-5" />
-          </div>
+          
           <div>
             <h2 className="text-sm font-bold font-mono tracking-wider text-blue-500 uppercase">Assumptions</h2>
             <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Assumptions in this FRI calculation</p>

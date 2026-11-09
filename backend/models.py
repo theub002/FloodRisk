@@ -114,3 +114,34 @@ class RainfallIntensity(Base):
     max_mm_day = Column(Float)
     
     city = relationship("City", back_populates="rainfall_intensities")
+
+class FloodReport(Base):
+    __tablename__ = "flood_reports"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(String, index=True) # ISO format string
+    city_id = Column(Integer, ForeignKey("cities.id", ondelete="SET NULL"), nullable=True)
+    city_name = Column(String, nullable=True)
+    ward_id = Column(Integer, ForeignKey("wards.id", ondelete="SET NULL"), nullable=True)
+    ward_name = Column(String, nullable=True)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    address_notes = Column(String, nullable=True)
+    
+    flood_depth = Column(String, nullable=False)
+    flood_depth_custom = Column(String, nullable=True)
+    
+    blockage = Column(String, nullable=False)
+    blockage_details = Column(String, nullable=True)
+    
+    road_submerged = Column(String, nullable=False)
+    vehicles_stranded = Column(Integer, default=0)
+    
+    house_flooding = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    
+    reporter_name = Column(String, default="Anonymous")
+    reporter_phone = Column(String, nullable=True)
+    
+    media_urls = Column(JSON, default=list) # List of URLs: ["/uploads/reports/..."]
+    status = Column(String, default="Reported")

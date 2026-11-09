@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, TriangleAlert, TriangleAlertIcon } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function LimitationsModal({ onClose, theme }: { onClose: () => void, theme: string }) {
   return (
@@ -16,9 +16,7 @@ export default function LimitationsModal({ onClose, theme }: { onClose: () => vo
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-500">
-            <TriangleAlert className="w-5 h-5" />
-          </div>
+          
           <div>
             <h2 className="text-sm font-bold font-mono tracking-wider text-pink-500 uppercase">Limitations</h2>
             <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Constraints of this FRI implementation</p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Compass } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function TerrainModal({ onClose, theme, terrainStats, cityName }: { onClose: () => void, theme: string, terrainStats: any, cityName: string }) {
   if (!terrainStats) return null;
@@ -18,9 +18,7 @@ export default function TerrainModal({ onClose, theme, terrainStats, cityName }:
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 flex items-center justify-center text-blue-600">
-            <Compass className="w-5 h-5 fill-blue-600 text-white" />
-          </div>
+          
           <h2 className="text-sm font-bold font-mono tracking-wider text-blue-600 uppercase">
             Terrain Statistics — {cityName}
           </h2>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, CloudRain } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
 
 export default function RainfallModal({ onClose, theme, rainfallData, cityName, selectedYear }: { onClose: () => void, theme: string, rainfallData: any, cityName: string, selectedYear: number }) {
@@ -19,9 +19,7 @@ export default function RainfallModal({ onClose, theme, rainfallData, cityName, 
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 flex items-center justify-center text-blue-600">
-            <CloudRain className="w-5 h-5" />
-          </div>
+          
           <h2 className="text-sm font-bold font-mono tracking-wider text-blue-600 uppercase">
             Rainfall Statistics — {cityName}
           </h2>

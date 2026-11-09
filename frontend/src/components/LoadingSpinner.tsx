@@ -18,12 +18,7 @@ export function FullPageLoader({
   submessage?: string;
   theme?: Theme;
 }) {
-  const [resolvedTheme, setResolvedTheme] = useState<Theme>(() => {
-    if (theme) return theme;
-    if (typeof window === 'undefined') return 'light';
-    const storedTheme = window.localStorage.getItem('floodrisk-theme');
-    return storedTheme === 'dark' ? 'dark' : 'light';
-  });
+  const [resolvedTheme, setResolvedTheme] = useState<Theme>(theme || 'light');
 
   useEffect(() => {
     if (theme) {
